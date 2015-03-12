@@ -77,3 +77,16 @@ else
 
   /bin/bash /etc/puppetlabs/puppet/environments/production/scripts/deploy.sh
 fi
+
+echo "PATH=/opt/puppet/bin:$PATH" >> /root/.bashrc
+
+cat << EOF > /etc/r10k.yaml
+---
+:cachedir: /var/cache/r10k
+:sources:
+  :local:
+    remote: https://github.com/ccaum/cloudbees-demo-site
+    basedir: /etc/puppetlabs/puppet/environments
+EOF
+
+/opt/puppet/bin/r10k deploy environment
