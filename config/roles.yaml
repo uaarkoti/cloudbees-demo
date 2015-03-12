@@ -1,0 +1,79 @@
+---
+roles:
+  master:
+    private_networks:
+      - ip: '0.0.0.0'
+        auto_network: true
+    provider:
+      type: virtualbox
+      customize:
+        - [modifyvm, !ruby/sym id, '--memory', 4096]
+        - [modifyvm, !ruby/sym id, '--ioapic', 'on']
+        - [modifyvm, !ruby/sym id, '--cpus', '4']
+    synced_folders:
+      - host_path:  '.files'
+        guest_path: '/var/seteam-files'
+    provisioners:
+      - type: shell
+        inline: "echo 'nameserver 8.8.8.8' > /etc/resolv.conf"
+      - type: hosts
+      - type: pe_bootstrap
+        role: !ruby/sym master
+        autosign:
+          - centos65a.pdx.puppetlabs.demo
+          - centos65b.syd.puppetlabs.demo
+          - centos70a.pdx.puppetlabs.demo
+          - centos70b.syd.puppetlabs.demo
+          - ubuntu1404a.pdx.puppetlabs.demo
+          - ubuntu1404b.syd.puppetlabs.demo
+          - server2012r2a.pdx.puppetlabs.demo
+          - server2012r2b.syd.puppetlabs.demo
+          - server2008r2a.pdx.puppetlabs.demo
+          - server2008r2b.syd.puppetlabs.demo
+          - satserver.inf.puppetlabs.demo
+      - type: shell
+        inline: |-
+          /bin/bash /vagrant/scripts/deploy.sh
+
+  windows_agent:
+    guest: windows
+    communicator: winrm
+    private_networks:
+      - {ip: '0.0.0.0', auto_network: true}
+    provisioners:
+      - {type: hosts}
+      - {type: pe_bootstrap, master: master.inf.puppetlabs.demo }
+
+  posix_agent:
+    private_networks:
+      - {ip: '0.0.0.0', auto_network: true}
+    provisioners:
+      - {type: shell, inline: "echo 'nameserver 8.8.8.8' > /etc/resolv.conf"}
+      - {type: hosts}
+      - type: shell
+        inline: |-
+          curl -sk https://master.inf.puppetlabs.demo:8140/packages/current/install.bash | /bin/bash 
+  
+  darwin_agent:
+    private_networks:
+      - {ip: '0.0.0.0', auto_network: true}
+
+  posix_noagent:
+    private_networks:
+      - {ip: '0.0.0.0', auto_network: true}
+    provisioners:
+      - {type: shell, inline: "echo 'nameserver 8.8.8.8' > /etc/resolv.conf"}
+      - {type: hosts}
+
+  satellite_server:
+    private_networks:
+      - {ip: '0.0.0.0', auto_network: true}
+    provisioners:
+      - {type: shell, inline: "echo 'nameserver 8.8.8.8' > /etc/resolv.conf"}
+      - {type: hosts, autoconfigure: true}
+      - type: shell
+        inline: 'iptables -F'
+      - type: shell
+        path: "scripts/install_satellite.sh"
+      - type: shell
+        path: "scripts/satellite-configs.sh"

@@ -1,0 +1,8 @@
+.files
+.pe_build/
+.vagrant/
+junit
+log
+Gemfile.lock
+Puppetfile.lock
+*war

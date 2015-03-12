@@ -1,0 +1,18 @@
+---
+vms:
+  - name: "master.inf.puppetlabs.demo"
+    box:  "puppetlabs/centos-6.5-64-nocm"
+    roles: [ "master" ]
+
+## For Jenkins Enterprise Demo
+  - name: "jenkins.inf.puppetlabs.demo"
+    box: "puppetlabs/centos-7.0-64-nocm"
+    roles: ["posix_agent"]
+
+  - name: "wordpress.pdx.puppetlabs.demo"
+    box: "puppetlabs/centos-7.0-64-nocm"
+    roles: ["posix_agent"]
+
+  - name: "wordpress-staging.pdx.puppetlabs.demo"
+    box: "puppetlabs/centos-7.0-64-nocm"
+    roles: ["posix_agent"]
