@@ -85,7 +85,7 @@ cat << EOF > /etc/r10k.yaml
 :cachedir: /var/cache/r10k
 :sources:
   :local:
-    remote: https://github.com/ccaum/cloudbees-demo-site
+    remote: https://github.com/puppetlabs/cloudbees-site
     basedir: /etc/puppetlabs/puppet/environments
 EOF
 
