@@ -53,6 +53,8 @@ roles:
       - type: shell
         inline: |-
           curl -sk https://master.inf.puppetlabs.demo:8140/packages/current/install.bash | /bin/bash 
+      - type: shell
+        inline: 'iptables -F'
   
   darwin_agent:
     private_networks:
