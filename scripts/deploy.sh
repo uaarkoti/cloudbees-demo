@@ -89,4 +89,12 @@ cat << EOF > /etc/r10k.yaml
     basedir: /etc/puppetlabs/puppet/environments
 EOF
 
-/opt/puppet/bin/r10k deploy environment
+/opt/puppet/bin/r10k deploy environment -p
+
+/bin/bash $basename/refresh_classes.sh
+/bin/bash $basename/classifier.sh
+/bin/bash $basename/rbac.sh
+
+/bin/bash $basename/connect_ds.sh
+
+/opt/puppet/bin/puppet agent --onetime --no-daemonize --color=false --verbose
